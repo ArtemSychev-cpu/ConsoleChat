@@ -32,7 +32,8 @@ public:
 	void showChat()const;
 	void showAllUserName() const;
 
-	
+
+};
   
 
 
@@ -44,5 +45,5 @@ public:
 
 
 
-};
+
 
