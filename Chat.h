@@ -1,5 +1,6 @@
 #pragma once
 #include<iostream>
+#include<cstdlib>
 #include<vector>
 #include "User.h"
 #include "Message.h"
@@ -14,10 +15,12 @@ public:
 	
 	struct ExceptLogin : public exception
 	{
-		const char* what() const noexcept override { return "Пользователь с таким логином уже существует"; }
+		const char* what() const noexcept override { return "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃ С‚Р°РєРёРј Р»РѕРіРёРЅРѕРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚"; }
 	};
+	
+
 	vector<User>& getAllUser() { return users; }
-	vector<Message>& getAllMessege() { return messages; }
+	vector<Message>& getAllMessage() { return messages; }
 	shared_ptr<User> getUserByLogin(const string& login) const;
 	shared_ptr<User> getUserByName(const string& name) const;
 	shared_ptr<User> getCurrentUser()const { return _currentUser; }
