@@ -1,6 +1,3 @@
-#include<iostream>
-#include"Message.h"
-#include<string>
 #include"User.h"
 #include"Chat.h"
 #include"Message.h"
@@ -21,3 +18,6 @@ int main()
 
 	return 0;
 }
+			
+
+	
