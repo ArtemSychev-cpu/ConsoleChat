@@ -2,14 +2,18 @@
 
 
 
-shared_ptr<User> Chat:: getUserByLogin(const string& login) const
+shared_ptr<User> Chat:: getUserByLogin(const string& login) const 
 {
-	for (auto& user : users)
-	{
-		if (login == user.get_login())
-			return make_shared<User>(user);
-	}
-	return nullptr;
+	
+		for (auto& user : users)
+		{
+			if (login == user.get_login())
+				return make_shared<User>(user);
+		}
+		
+		return nullptr;
+	
+	
 }
 shared_ptr<User>Chat::getUserByName(const string& name) const
 {
@@ -18,12 +22,13 @@ shared_ptr<User>Chat::getUserByName(const string& name) const
 		if (name == user.get_name())
 			return make_shared<User>(user);
 	}
+	return nullptr;
 }
 	void Chat::startMenu()
 	{
 
 		int choise = 0;
-		cout << "Çäðàâñòâóéòå! Âûáåðèòå øàã: 1 - ðåãèñòðàöèÿ â ÷àòå, 2 - âõîä â àêêàóíò, 0 - âûõîä" << endl;
+		cout << "Ð—Ð´Ñ€Ð°Ð²ÑÑ‚Ð²ÑƒÐ¹Ñ‚Ðµ! Ð’Ñ‹Ð±ÐµÑ€Ð¸Ñ‚Ðµ ÑˆÐ°Ð³: 1 - Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð°Ñ†Ð¸Ñ Ð² Ñ‡Ð°Ñ‚Ðµ, 2 - Ð²Ñ…Ð¾Ð´ Ð² Ð°ÐºÐºÐ°ÑƒÐ½Ñ‚, 0 - Ð²Ñ‹Ñ…Ð¾Ð´" << endl;
 		cin >> choise;
 		if (choise == 1)
 			registration();
@@ -36,20 +41,20 @@ shared_ptr<User>Chat::getUserByName(const string& name) const
 		do
 		{
 
-			cout << "Ââåäèòå èìÿ" << endl;
+			cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¸Ð¼Ñ" << endl;
 			cin >> name;
-			cout << "Ââåäèòå ëîãèí" << endl;
+			cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð»Ð¾Ð³Ð¸Ð½" << endl;
 			cin >> login;
-			cout << "Ââåäèòå ïàðîëü" << endl;
+			cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ" << endl;
 			cin >> password;
 			if (getUserByLogin(login) || login == "all")
 			{
 				throw ExceptLogin();
 			}
 
-			User user = User(login, password, name);
+			User user = User(name, login, password);
 			users.push_back(user);
-			_currentUser = std::make_shared<User>(user);
+			_currentUser = make_shared<User>(user);
 		} while (!_currentUser);
 	}
 	void Chat::LogAccount()
@@ -58,15 +63,15 @@ shared_ptr<User>Chat::getUserByName(const string& name) const
 		char choise;
 		do {
 
-			cout << "Ââåäèòå ëîãèí" << endl;
+			cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð»Ð¾Ð³Ð¸Ð½" << endl;
 			cin >> login;
-			cout << "Ââåäèòå ïàðîëü" << endl;
+			cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ" << endl;
 			cin >> password;
 			_currentUser = getUserByLogin(login);
 			if (_currentUser == nullptr || (password != _currentUser->get_password()))
 			{
 				_currentUser = nullptr;
-				cout << "Ïîëüçîâàòåëü íå çàðåãèñòðèðîâàí, ëþáîé ñèìâîë - ïîâòîðèòü ââîä, 0  - âûõîä" << endl;
+				cout << "ÐŸÐ¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒ Ð½Ðµ Ð·Ð°Ñ€ÐµÐ³Ð¸ÑÑ‚Ñ€Ð¸Ñ€Ð¾Ð²Ð°Ð½, Ð»ÑŽÐ±Ð¾Ð¹ ÑÐ¸Ð¼Ð²Ð¾Ð» - Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€Ð¸Ñ‚ÑŒ Ð²Ð²Ð¾Ð´, 0  - Ð²Ñ‹Ñ…Ð¾Ð´" << endl;
 				cin >> choise;
 				if (choise =='0')
 					startMenu();
@@ -76,20 +81,21 @@ shared_ptr<User>Chat::getUserByName(const string& name) const
 	}
 	void Chat:: sendMessage()
 	{
-		string text, to;
-			
-			cout << "Îòïðàâèòü ñîîáùåíèå êîíêðåòíîìó ïîëüçîâàòåëþ ââåäèòå åãî èìÿ" << endl;
-			cout << "×òîáû îòïðàâèòü Âñåì, ââåäèòå 'all' " << endl;
-			cin >> to;
-			cout << "Òåêñò:  ";
-			cin.ignore();
-			getline(cin, text);
+		string to, text;
 
-			if (!(to == "all" || getUserByLogin(to)))
-			{
-				cout << "Òàêîãî ïîëüçîâàòåëÿ íå ñóùåñòâóåò : " << to << endl;
-			}
-		
+		cout << "ÐžÑ‚Ð¿Ñ€Ð°Ð²Ð¸Ñ‚ÑŒ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ ÐºÐ¾Ð½ÐºÑ€ÐµÑ‚Ð½Ð¾Ð¼Ñƒ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŽ Ð²Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÐµÐ³Ð¾ Ð¸Ð¼Ñ" << endl;
+		cout << "Ð§Ñ‚Ð¾Ð±Ñ‹ Ð¾Ñ‚Ð¿Ñ€Ð°Ð²Ð¸Ñ‚ÑŒ Ð’ÑÐµÐ¼, Ð²Ð²ÐµÐ´Ð¸Ñ‚Ðµ 'all' " << endl;
+		cin >> to;
+		cout << "Ð¢ÐµÐºÑÑ‚:  ";
+		cin.ignore();
+		getline(cin, text);
+
+		if (!(to == "all" || getUserByName(to)))
+		{
+			cout << "Ð¢Ð°ÐºÐ¾Ð³Ð¾ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ Ð½Ðµ ÑÑƒÑ‰ÐµÑÑ‚Ð²ÑƒÐµÑ‚ : " << to << endl;
+			return;
+		}
+
 
 		if (to == "all")
 			messages.push_back(Message(_currentUser->get_login(), "all", text));
@@ -105,12 +111,12 @@ shared_ptr<User>Chat::getUserByName(const string& name) const
 
 		while (_currentUser)
 		{
-			cout << "Ïðèâåò " << _currentUser->get_name() << endl;
-			cout << "Ìåíþ:" << endl;
-			cout << "1. Ïîêàçàòü ÷àò" << endl;
-			cout << "2. Íàïèñàòü ñîîáùåíèå" << endl;
-			cout << "3. Ïîëüçîâàòåëè" << endl;
-			cout << "0. Âûõîä" << endl;
+			cout << "ÐŸÑ€Ð¸Ð²ÐµÑ‚ " << _currentUser->get_name() << endl;
+			cout << "ÐœÐµÐ½ÑŽ:" << endl;
+			cout << "1. ÐŸÐ¾ÐºÐ°Ð·Ð°Ñ‚ÑŒ Ñ‡Ð°Ñ‚" << endl;
+			cout << "2. ÐÐ°Ð¿Ð¸ÑÐ°Ñ‚ÑŒ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ" << endl;
+			cout << "3. ÐŸÐ¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ð¸" << endl;
+			cout << "0. Ð’Ñ‹Ñ…Ð¾Ð´" << endl;
 
 			cout << endl;
 
@@ -139,45 +145,37 @@ shared_ptr<User>Chat::getUserByName(const string& name) const
 	string from;
 	string to;
 
-	cout << "Èñòîðèÿ ñîîáùåíèé" << endl;
+	cout << "Ð˜ÑÑ‚Ð¾Ñ€Ð¸Ñ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ð¹" << endl;
 
 	for (auto& m : messages)
 	{
 		if (_currentUser->get_login() == m.get_from() || _currentUser->get_login() == m.get_to() || m.get_to() == "all")
 		{
-		from = (_currentUser->get_login() == m.get_from() ? "Ìåíÿ" : getUserByLogin(m.get_from())->get_name());
+		from = (_currentUser->get_login() == m.get_from() ? "ÐœÐµÐ½Ñ" : getUserByLogin(m.get_from())->get_name());
 		if (m.get_to() == "all")
 		{
-			to = " Âñåì ";
+			to = " Ð’ÑÐµÐ¼ ";
 		}
 		else
 		{
-		to = (_currentUser->get_login() == m.get_to()) ? "Ìíå" : getUserByLogin(m.get_to())->get_name();
+		to = (_currentUser->get_login() == m.get_to()) ? "ÐœÐ½Ðµ" : getUserByLogin(m.get_to())->get_name();
 		}
-		cout << " Ñîîáùåíèå îò " << from << "  Êîìó  " << to << endl;
-		cout << "Òåêñò  " << m.get_text() << endl;
+		cout << " Ð¡Ð¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ Ð¾Ñ‚ " << from << "  ÐšÐ¾Ð¼Ñƒ  " << to << endl;
+		cout << "Ð¢ÐµÐºÑÑ‚  " << m.get_text() << endl;
 		}
     }
     }
 	void Chat::showAllUserName() const
 	{
-		cout << "Ïîëüçîâàòåëü: " << endl;
+		cout << "ÐŸÐ¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒ: " << endl;
 		for (auto& user : users)
 		{
 			cout << user.get_name();
 			if (_currentUser->get_login() == user.get_login())
-				cout << " ß " << endl;
+				cout << " Ð¯ " << endl;
 			cout << endl;
 		}
 	}
-
-
-
-
-
-
-
-
 
 
 
